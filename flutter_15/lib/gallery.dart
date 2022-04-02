@@ -10,35 +10,58 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grid View'),
+        title: const Text('Gallery'),
       ),
       body: Column(
         children: [
           Expanded(
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, mainAxisSpacing: 10, crossAxisSpacing: 10),
+                  crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10),
               itemBuilder: (ctx, index) {
                 final String imageUrl = faker.image
-                    .image(random: true); //hanya digunakan pada variable itemBuilder
+                    .image(random: true, keywords: ['emoticons']); //hanya digunakan pada variable itemBuilder
 
                 return InkWell(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
-                        radius: 20,
+                        radius: 50,
                         backgroundImage: NetworkImage(imageUrl),
                       ),
                       Text(faker.lorem.word())
                     ],
                   ),
                   onTap: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (ctx) {
-                          return Image.network(imageUrl);
-                        });
+                    showDialog(
+                      context: context, 
+                      builder: (BuildContext context){
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10))),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Image.network(imageUrl, height: 200, width: 300,),
+                              Text(faker.lorem.word()),
+                            ],),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).pop(), 
+                              child: Text('Oke'),
+                            ),
+                          ],
+                        );
+                      }
+                    );
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   builder: (ctx) {
+                    //     return Image.network(imageUrl);
+                    //   }
+                    // );
                   },
                 );
               },
